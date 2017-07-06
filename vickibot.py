@@ -106,22 +106,22 @@ class VickiBot:
 
     def getKrakenETHBTC(self):
         if self is None:
-            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship')
 
         return self.getKrakenOrders("XETHXXBT")
 
     def longPosition(self, sellOrders, currency1, currency2):
         if self is None:
-            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship')
 
         if sellOrders is None:
-            raise ValueError('RIP: sellOrders is empty, abandoning ship ⛵')
+            raise ValueError('RIP: sellOrders is empty, abandoning ship')
 
         if currency1 is None:
-            raise ValueError('RIP: currency1 is empty, abandoning ship ⛵')
+            raise ValueError('RIP: currency1 is empty, abandoning ship')
 
         if currency2 is None:
-            raise ValueError('RIP: currency2 is empty, abandoning ship ⛵')
+            raise ValueError('RIP: currency2 is empty, abandoning ship')
 
         print("Going long on", currency1, currency2, "(buy eth with btc)")
         ethAmount,btcAmount = self.getKrakenEthBTCBalance()
@@ -141,7 +141,7 @@ class VickiBot:
 
     def shortPosition(self, buyOrders, currency1, currency2):
         if self is None:
-            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship')
 
         print("Going short on", currency1, currency2,"(sell btc for eth)")
         ethAmount,btcAmount = self.getKrakenEthBTCBalance()
@@ -161,21 +161,21 @@ class VickiBot:
 
     def longETHBTC(self):
         if self is None:
-            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship')
 
         (buyOrders, sellOrders) = self.getKrakenETHBTC()
         self.longPosition(sellOrders, "ETH", "BTC")
 
     def shortETHBTC(self):
         if self is None:
-            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship')
 
         (buyOrders, sellOrders) = self.getKrakenETHBTC()
         self.shortPosition(buyOrders, "ETH", "BTC")
 
     def getKrakenEthBTCBalance(self):
         if self is None:
-            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship')
 
         print("Getting Kraken balance...")
         balance = self.kraken.query_private('Balance')
@@ -198,10 +198,10 @@ class VickiBot:
 
     def parseTweetInfo(self, tweet):
         if self is None:
-            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship')
 
         if tweet is None:
-            raise ValueError('RIP: tweet 🐦 is empty, abandoning ship ⛵')
+            raise ValueError('RIP: tweet 🐦 is empty, abandoning ship')
 
         print("Parsing out the tweet...")
         tweetUpper = tweet.upper()
@@ -217,7 +217,7 @@ class VickiBot:
     def practiceRun(self):
 
         if self is None:
-            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship')
 
         t = threading.Timer(20.0, self.practiceRun)
         t.daemon = True
@@ -244,11 +244,12 @@ class listener(StreamListener):
  
     def on_data(self, data):
         #print(data)
-        jdata = json.dumps(data)
+        jdata = json.loads(data)
         try:
             tweetText = jdata['text']
-        except:
+        except Exception as e:
             tweetText = ''
+            print("exception:",e)
         print("tweeted:", tweetText)
         self.vickibot.parseTweetInfo(tweetText)
 
@@ -288,7 +289,7 @@ elif len(sys.argv) == 1:
         except KeyboardInterrupt:
             print("W: interrupt received, stopping…")
         except Exception as e:
-            print("some sort of error lol",e.message)
+            print("some sort of error lol",e)
 else:
     print(usage)
     sys.exit()
