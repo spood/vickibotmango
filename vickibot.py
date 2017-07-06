@@ -36,19 +36,19 @@ class VickiBot:
 
     def buyOrderKrakenETHBTC(self,volume,price):
         if isinstance(volume, Decimal) == False:
-            raise TypeError('RIP: volume NaN, abandoning ship ⛵')
+            raise TypeError('RIP: volume NaN, abandoning ship')
 
-        if isinstance(price, int) == False:
-            raise TypeError('RIP: price NaN, abandoning ship ⛵')
+        if isinstance(price, Decimal) == False:
+            raise TypeError('RIP: price NaN, abandoning ship')
 
         if self is None:
-            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship')
 
         if volume is None:
-            raise ValueError('RIP: volume is empty, abandoning ship ⛵')
+            raise ValueError('RIP: volume is empty, abandoning ship')
 
         if price is None:
-            raise ValueError('RIP: price is empty, abandoning ship ⛵')
+            raise ValueError('RIP: price is empty, abandoning ship')
 
         print("Actually placing buy limit order for ETH with BTC at price",price,"with volume",volume)
 
@@ -58,21 +58,22 @@ class VickiBot:
                                  'price': price,
                                  'volume': volume})
 
+
     def sellOrderKrakenETHBTC(self,volume,price):
         if isinstance(volume, Decimal) == False:
-            raise TypeError('RIP: volume NaN, abandoning ship ⛵')
+            raise TypeError('RIP: volume NaN, abandoning ship')
 
-        if isinstance(price, int) == False:
-            raise TypeError('RIP: price NaN, abandoning ship ⛵')
+        if isinstance(price, Decimal) == False:
+            raise TypeError('RIP: price NaN, abandoning ship')
 
         if self is None:
-            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship')
 
         if volume is None:
-            raise ValueError('RIP: volume is empty, abandoning ship ⛵')
+            raise ValueError('RIP: volume is empty, abandoning ship')
 
         if price is None:
-            raise ValueError('RIP: price is empty, abandoning ship ⛵')
+            raise ValueError('RIP: price is empty, abandoning ship')
 
         print("Actually placing sell limit order for ETH with BTC at price",price,"with volume",volume)
 
@@ -83,11 +84,11 @@ class VickiBot:
                                  'volume': volume})
 
     def getKrakenOrders(self,pairname):
-         if self is None:
-            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+        if self is None:
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship')
 
-         if pairname is None:
-            raise ValueError('RIP: pairname is empty, abandoning ship ⛵')
+        if pairname is None:
+            raise ValueError('RIP: pairname is empty, abandoning ship')
 
         krakenOrders = self.kraken.query_public('Depth',{'pair': pairname, 'count': '10'})
         #print(krakenOrders)
