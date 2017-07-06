@@ -22,11 +22,19 @@ Supported Pairs:
 Config 
 ************
 
+<<<<<<< HEAD
 Get **krakenex** and **tweepy** from somewhere
+=======
+ - sudo apt-get install python3 python-pip3
+ - sudo pip install virtualenv
+ -
+
+ To activate virtual python enviroment with it's dependencies
+ virtualenv --no-site-packages --distribute -p /usr/bin/python3 .venv && source .venv/bin/activate && pip3 install -r requirements.txt
+
+
+ To unactivate and return to normal system python
+ - deactivate
+>>>>>>> fb884ea... Enabling non-mandatory usage of VirtualENV
 
 Rename **keys.json.preview** to **keys.json** and add your own kraken and twitter keys to it.
-
-Disclaimer
-************
-
-You'd have to be a mad lad to actually use this thing. You're responsible for running this trash.
