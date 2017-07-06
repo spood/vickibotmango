@@ -27,7 +27,7 @@ Requirements
  - Python3 and pip3
   - sudo apt-get install python3 python-pip3
  - virtualenv
-  - sudo pip install virtualenv
+  - sudo pip3 install virtualenv
 
 
  To activate virtual python enviroment with it's dependencies
