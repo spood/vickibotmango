@@ -23,3 +23,5 @@ Config
 ************
 
 Get **krakenex** and **tweepy** from somewhere
+
+Rename **keys.json.preview** to **keys.json** and add your own kraken and twitter keys to it.
