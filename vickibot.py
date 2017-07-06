@@ -83,6 +83,12 @@ class VickiBot:
                                  'volume': volume})
 
     def getKrakenOrders(self,pairname):
+         if self is None:
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+
+         if pairname is None:
+            raise ValueError('RIP: pairname is empty, abandoning ship ⛵')
+
         krakenOrders = self.kraken.query_public('Depth',{'pair': pairname, 'count': '10'})
         #print(krakenOrders)
 
@@ -107,6 +113,15 @@ class VickiBot:
         if self is None:
             raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
 
+        if sellOrders is None:
+            raise ValueError('RIP: sellOrders is empty, abandoning ship ⛵')
+
+        if currency1 is None:
+            raise ValueError('RIP: currency1 is empty, abandoning ship ⛵')
+
+        if currency2 is None:
+            raise ValueError('RIP: currency2 is empty, abandoning ship ⛵')
+
         print("Going long on", currency1, currency2, "(buy eth with btc)")
         ethAmount,btcAmount = self.getKrakenEthBTCBalance()
         #btcAmount = Decimal(0.001)
@@ -124,7 +139,6 @@ class VickiBot:
                 break
 
     def shortPosition(self, buyOrders, currency1, currency2):
-
         if self is None:
             raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
 
@@ -145,7 +159,6 @@ class VickiBot:
                 break
 
     def longETHBTC(self):
-
         if self is None:
             raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
 
@@ -153,7 +166,6 @@ class VickiBot:
         self.longPosition(sellOrders, "ETH", "BTC")
 
     def shortETHBTC(self):
-
         if self is None:
             raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
 
@@ -161,7 +173,6 @@ class VickiBot:
         self.shortPosition(buyOrders, "ETH", "BTC")
 
     def getKrakenEthBTCBalance(self):
-
         if self is None:
             raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
 
@@ -185,9 +196,11 @@ class VickiBot:
 
 
     def parseTweetInfo(self, tweet):
-
         if self is None:
             raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+
+        if tweet is None:
+            raise ValueError('RIP: tweet 🐦 is empty, abandoning ship ⛵')
 
         print("Parsing out the tweet...")
         tweetUpper = tweet.upper()
