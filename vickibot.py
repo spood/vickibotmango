@@ -35,7 +35,7 @@ class VickiBot:
     #        json.dump(self.stats, jsonFile)
 
     def buyOrderKrakenETHBTC(self,volume,price):
-        if isinstance(volume, int) == False:
+        if isinstance(volume, Decimal) == False:
             raise TypeError('RIP: volume NaN, abandoning ship ⛵')
 
         if isinstance(price, int) == False:
@@ -59,7 +59,7 @@ class VickiBot:
                                  'volume': volume})
 
     def sellOrderKrakenETHBTC(self,volume,price):
-        if isinstance(volume, int) == False:
+        if isinstance(volume, Decimal) == False:
             raise TypeError('RIP: volume NaN, abandoning ship ⛵')
 
         if isinstance(price, int) == False:
