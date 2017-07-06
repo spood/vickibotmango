@@ -1,0 +1,12 @@
+{
+    "kraken": {
+        "api_key": "blahblahblahblahblahblah",
+        "priv_key": "blahblahblah"
+    },
+    "twitter": {
+        "ckey" : "blahblahblah",
+        "consumer_secret" : "blahblahblah",
+        "access_token_key" : "blahblahblahblahblahblah",
+        "access_token_secret" : "blahblahblah"
+    }
+}
