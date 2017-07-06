@@ -1,6 +1,8 @@
-# vickibot mango
+=============================================
+vickibot mango
+=============================================
 
-Makes trades on Kraken based on what vicki the crypto bot does.
+Makes trades on Kraken based on what Vicki the crypto bot does.
 
 ::
 
@@ -8,6 +10,7 @@ Makes trades on Kraken based on what vicki the crypto bot does.
   
   Examples:
   
+  vickibot.py                                    Waits for Vicki to make a tweet then trades based on that
   vickibot.py m [short|long]                     Execute a short or long trade manually
 
 
