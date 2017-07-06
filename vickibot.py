@@ -11,9 +11,6 @@ from tweepy.streaming import StreamListener
 import os
 import sys
 
-
-# Created by Sumeet Gill
-
 ckey = consumer_secret = access_token_key = access_token_secret = ''
 
 
@@ -38,7 +35,23 @@ class VickiBot:
     #        json.dump(self.stats, jsonFile)
 
     def buyOrderKrakenETHBTC(self,volume,price):
+        if isinstance(volume, int) == False:
+            raise TypeError('RIP: volume NaN, abandoning ship ⛵')
+
+        if isinstance(price, int) == False:
+            raise TypeError('RIP: price NaN, abandoning ship ⛵')
+
+        if self is None:
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+
+        if volume is None:
+            raise ValueError('RIP: volume is empty, abandoning ship ⛵')
+
+        if price is None:
+            raise ValueError('RIP: price is empty, abandoning ship ⛵')
+
         print("Actually placing buy limit order for ETH with BTC at price",price,"with volume",volume)
+
         self.kraken.query_private('AddOrder', {'pair': 'XETHXXBT',
                                  'type': 'buy',
                                  'ordertype': 'limit',
@@ -46,7 +59,23 @@ class VickiBot:
                                  'volume': volume})
 
     def sellOrderKrakenETHBTC(self,volume,price):
+        if isinstance(volume, int) == False:
+            raise TypeError('RIP: volume NaN, abandoning ship ⛵')
+
+        if isinstance(price, int) == False:
+            raise TypeError('RIP: price NaN, abandoning ship ⛵')
+
+        if self is None:
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+
+        if volume is None:
+            raise ValueError('RIP: volume is empty, abandoning ship ⛵')
+
+        if price is None:
+            raise ValueError('RIP: price is empty, abandoning ship ⛵')
+
         print("Actually placing sell limit order for ETH with BTC at price",price,"with volume",volume)
+
         self.kraken.query_private('AddOrder', {'pair': 'XETHXXBT',
                                  'type': 'sell',
                                  'ordertype': 'limit',
@@ -69,9 +98,15 @@ class VickiBot:
         return (krakenBuyOrdersD,krakenSellOrdersD)
 
     def getKrakenETHBTC(self):
+        if self is None:
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+
         return self.getKrakenOrders("XETHXXBT")
 
     def longPosition(self, sellOrders, currency1, currency2):
+        if self is None:
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+
         print("Going long on", currency1, currency2, "(buy eth with btc)")
         ethAmount,btcAmount = self.getKrakenEthBTCBalance()
         #btcAmount = Decimal(0.001)
@@ -89,6 +124,10 @@ class VickiBot:
                 break
 
     def shortPosition(self, buyOrders, currency1, currency2):
+
+        if self is None:
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+
         print("Going short on", currency1, currency2,"(sell btc for eth)")
         ethAmount,btcAmount = self.getKrakenEthBTCBalance()
         #ethAmount = Decimal(0.01)
@@ -106,14 +145,26 @@ class VickiBot:
                 break
 
     def longETHBTC(self):
+
+        if self is None:
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+
         (buyOrders, sellOrders) = self.getKrakenETHBTC()
         self.longPosition(sellOrders, "ETH", "BTC")
 
     def shortETHBTC(self):
+
+        if self is None:
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+
         (buyOrders, sellOrders) = self.getKrakenETHBTC()
         self.shortPosition(buyOrders, "ETH", "BTC")
 
     def getKrakenEthBTCBalance(self):
+
+        if self is None:
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+
         print("Getting Kraken balance...")
         balance = self.kraken.query_private('Balance')
 
@@ -134,6 +185,10 @@ class VickiBot:
 
 
     def parseTweetInfo(self, tweet):
+
+        if self is None:
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+
         print("Parsing out the tweet...")
         tweetUpper = tweet.upper()
         if 'SHORT' in tweetUpper:
@@ -146,6 +201,10 @@ class VickiBot:
             print("didn't meet any conditions for action")
 
     def practiceRun(self):
+
+        if self is None:
+            raise ValueError('RIP: self is empty (me_irl), abandoning ship ⛵')
+
         t = threading.Timer(20.0, self.practiceRun)
         t.daemon = True
         t.start()
