@@ -15,4 +15,11 @@ Makes trades on Kraken based on what Vicki the crypto bot does.
 
 
 Supported Pairs:
+
 - ETHBTC
+
+
+Config 
+************
+
+Get **krakenex** and **tweepy** from somewhere
