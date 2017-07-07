@@ -117,14 +117,13 @@ class VickiBot:
         if price is None:
             raise ValueError('RIP: price is empty, abandoning ship')
 
-        calculatedVolume = ethToSpend / price
-        print("Actually placing sell limit order for ETH with BTC at price",price,"with ethToSpend",ethToSpend,"calculated volume:",calculatedVolume)
+        print("Actually placing sell limit order for ETH with BTC at price",price,"with ethToSpend",ethToSpend)
 
         self.kraken.query_private('AddOrder', {'pair': 'XETHXXBT',
                                  'type': 'sell',
                                  'ordertype': 'limit',
                                  'price': price,
-                                 'volume': calculatedVolume})
+                                 'volume': ethToSpend})
 
     def getKrakenOrders(self,pairname):
         if self is None:
@@ -300,6 +299,10 @@ class listener(StreamListener):
         #print(data)
         jdata = json.loads(data)
         try:
+            if str(jdata["user"]["id"]).encode("utf8") != str("834940874643615744").encode("utf8"):
+                tweetText = ''
+                print("Ignoring tweet, not a vicki tweet")
+                return;
             tweetText = jdata['text']
         except Exception as e:
             tweetText = ''
