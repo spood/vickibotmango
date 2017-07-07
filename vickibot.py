@@ -4,6 +4,7 @@ import krakenex
 from decimal import getcontext, Decimal, ROUND_UP, ROUND_DOWN
 import threading
 import time
+from datetime import datetime
 import tweepy
 from tweepy import Stream
 from tweepy import OAuthHandler
@@ -16,6 +17,25 @@ ckey = consumer_secret = access_token_key = access_token_secret = ''
 
 usage = "Usage: vickiboy.py \n\
 For a manual run add the arguments: m [short/long]"
+
+
+
+
+
+# help format timedelta objects into strings
+def strfdelta(tdelta, fmt):
+    d = {"days": tdelta.days}
+    d["hours"], rem = divmod(tdelta.seconds, 3600)
+    d["minutes"], d["seconds"] = divmod(rem, 60)
+    return fmt.format(**d)
+
+# help determine if a number is within a certain percent of another. For 10%, percentAmount should be 0.1
+def isNumberWithinPercentOfNumber(numberToCheck, baseNumber, percentAmount):
+    lowerRange = baseNumber - (baseNumber * percentAmount)
+    upperRange = baseNumber + (baseNumber * percentAmount)
+    if lowerRange < numberToCheck < upperRange:
+        return True
+    return False
 
 # Parse out the tweets from https://twitter.com/vickicryptobot and see if profit is to be made from following them
 class VickiBot:
@@ -33,6 +53,27 @@ class VickiBot:
     #    print("updated with new balance stats",self.stats["balances"])
     #    with open("stats.json", "w") as jsonFile:
     #        json.dump(self.stats, jsonFile)
+
+    def getPriceHistoryAverage(self):
+        response = self.kraken.query_public('Trades', {'pair': 'XETHXXBT'})
+        recentTrades = response["result"]["XETHXXBT"]
+        oldestTrade = recentTrades[0]
+        # oldestTrade looks like    ['0.101673', '0.00200000', 1499376600.2512, 'b', 'm', '']
+        # presumably                [price, volume, timestamp (epoch), buy/sell, market/limit, unknown?]
+        middleTrade = recentTrades[len(recentTrades)//2] # floor division so it forces integer
+        oldestTradeTime = datetime.fromtimestamp(oldestTrade[2])
+        middleTradeTime = datetime.fromtimestamp(middleTrade[2])
+
+        currentTime = datetime.now()
+        oldestTimeDiff = currentTime - oldestTradeTime
+        oldestTimeDiffStr = strfdelta(oldestTimeDiff, "{hours} hours {minutes} minutes")
+
+        middleTimeDiff = currentTime - middleTradeTime
+        middleTimeDiffStr = strfdelta(middleTimeDiff, "{hours} hours {minutes} minutes")
+
+        averagePrice = (Decimal(oldestTrade[0]) + Decimal(middleTrade[0])) / 2
+        print("Between",oldestTimeDiffStr,"and",middleTimeDiffStr,"ago the average price was:",averagePrice)
+        return averagePrice
 
     def buyOrderKrakenETHBTC(self,volume,price):
         if isinstance(volume, Decimal) == False:
@@ -123,11 +164,17 @@ class VickiBot:
         if currency2 is None:
             raise ValueError('RIP: currency2 is empty, abandoning ship')
 
+
+        averagePrice = self.getPriceHistoryAverage()
+
         print("Going long on", currency1, currency2, "(buy eth with btc)")
         ethAmount,btcAmount = self.getKrakenEthBTCBalance()
         #btcAmount = Decimal(0.001)
         countAbleVolume = btcAmount.quantize(Decimal('.00001'), rounding=ROUND_DOWN)
         for kprice, kvolume in sellOrders:
+            if(isNumberWithinPercentOfNumber(kprice,averagePrice,Decimal(0.1)) == False):
+                print("WARNING: price", kprice, "is not within 10% of the recent average price", averagePrice, "not opening an order")
+                break
             print("BTC to spend",countAbleVolume)
             print("viewing sell orders (price,volume):",kprice,kvolume)
             if(countAbleVolume > Decimal(0.00000)):
@@ -143,11 +190,16 @@ class VickiBot:
         if self is None:
             raise ValueError('RIP: self is empty (me_irl), abandoning ship')
 
+        averagePrice = self.getPriceHistoryAverage()
+
         print("Going short on", currency1, currency2,"(sell btc for eth)")
         ethAmount,btcAmount = self.getKrakenEthBTCBalance()
         #ethAmount = Decimal(0.01)
         countAbleVolume = ethAmount.quantize(Decimal('.00001'), rounding=ROUND_DOWN)
         for kprice, kvolume in buyOrders:
+            if(isNumberWithinPercentOfNumber(kprice,averagePrice,Decimal(0.1)) == False):
+                print("WARNING: price", kprice, "is not within 10% of the recent average price", averagePrice, "not opening an order")
+                break
             print("ETH to spend",countAbleVolume)
             print("viewing buy orders (price,volume):",kprice,kvolume)
             if(countAbleVolume > Decimal(0.00000)):
@@ -253,6 +305,10 @@ class listener(StreamListener):
         print("tweeted:", tweetText)
         self.vickibot.parseTweetInfo(tweetText)
 
+    def on_status(self, status):
+        print(status)
+        print(status.text)
+
     def on_error(self, status):
         print("error",status)
 
@@ -277,6 +333,14 @@ if len(sys.argv) == 3 and sys.argv[1] == "m":
     print("Doing manual run using simulated tweet: ", practiceTweet)
     vickibot = VickiBot()
     vickibot.parseTweetInfo(practiceTweet)
+elif len(sys.argv) == 2 and sys.argv[1] == "p":
+    vickibot = VickiBot()
+    averagePrice = vickibot.getPriceHistoryAverage()
+    print("verifying if average price:",averagePrice,"is within 10% of 0.11")
+    if(isNumberWithinPercentOfNumber(Decimal(0.11),averagePrice,Decimal(0.1))):
+        print("it is")
+    else:
+        print("it isn't")
 elif len(sys.argv) == 1:
     print("listening on twitter")
     auth = OAuthHandler(ckey, consumer_secret) #OAuth object
